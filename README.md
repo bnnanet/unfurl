@@ -73,3 +73,4 @@ Note: at least on macOS, Android only builds for `arm64`, see <https://github.co
 This started out as a "vibe coding" session with Grok 3:
 
 - <https://www.youtube.com/watch?v=fPVzPwm5KxE>
+- <https://x.com/i/grok/share/fkPCdTh2eWdbxA8Dmte73xQrW>

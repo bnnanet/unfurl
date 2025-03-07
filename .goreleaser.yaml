@@ -1,0 +1,132 @@
+# This is an example .goreleaser.yml file with some sensible defaults.
+# Make sure to check the documentation at https://goreleaser.com
+
+# The lines below are called `modelines`. See `:help modeline`
+# Feel free to remove those if you don't want/need to use them.
+# yaml-language-server: $schema=https://goreleaser.com/static/schema.json
+# vim: set ts=2 sw=2 tw=0 fo=cnqoj
+
+version: 2
+
+before:
+  hooks:
+    # You may remove this if you don't use go modules.
+    - go mod tidy
+    # you may remove this if you don't need go generate
+    - go generate ./...
+
+builds:
+  - id: unfurld-almost-all
+    binary: unfurld
+    main: ./cmd/unfurld/
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - aix
+      - darwin
+      - dragonfly
+      - freebsd
+      - illumos
+      - js
+      - linux
+      - netbsd
+      - openbsd
+      - plan9
+      - solaris
+      - wasip1
+      - windows
+
+  - id: unfurl-almost-all
+    binary: unfurl
+    main: ./cmd/unfurl/
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - aix
+      - darwin
+      - dragonfly
+      - freebsd
+      - illumos
+      - js
+      - linux
+      - netbsd
+      - openbsd
+      - plan9
+      - solaris
+      - wasip1
+      - windows
+  - id: unfurld-ios
+    binary: unfurld
+    main: ./cmd/unfurld/
+    env:
+      - CGO_ENABLED=1
+    goos:
+      - ios
+  - id: unfurl-ios
+    binary: unfurl
+    main: ./cmd/unfurl/
+    env:
+      - CGO_ENABLED=1
+    goos:
+      - ios
+  - id: unfurld-android-no-sdk
+    binary: unfurld
+    main: ./cmd/unfurld/
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - android
+    goarch:
+      - arm64
+  - id: unfurl-android-no-sdk
+    binary: unfurl
+    main: ./cmd/unfurl/
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - android
+    goarch:
+      - arm64
+  #- id: unfurl-android
+  #  main: ./cmd/unfurl/
+  #  env:
+  #    #- ANDROID_NDK_HOME="$HOME/.local/opt/android-ndk"
+  #    - CGO_ENABLED=1
+  #    - CC="$ANDROID_NDK_HOME/toolchains/llvm/prebuilt/darwin-x86_64/bin/clang"
+  #    - CXX="$ANDROID_NDK_HOME/toolchains/llvm/prebuilt/darwin-x86_64/bin/clang++"
+  #  goos:
+  #    - android
+  #  goarch:
+  #    - 386 # target=android_386_sse2 # _cgo_export.c:3:10: fatal error: 'stdlib.h' file not found
+  #    - amd64 # target=android_amd64_v1 _cgo_export.c:3:10: fatal error: 'stdlib.h' file not found
+  #    - arm # target=android_arm_7 # clang: error: unsupported option '-mno-thumb' for target 'x86_64-apple-darwin23.6.0'
+  #    - arm64 # android_arm64_v8.0 # _cgo_export.c:3:10: fatal error: 'stdlib.h' file not found
+
+archives:
+  - format: tar.gz
+    # this name template makes the OS and Arch compatible with the results of `uname`.
+    name_template: >-
+      {{ .ProjectName }}_
+      {{- title .Os }}_
+      {{- if eq .Arch "amd64" }}x86_64
+      {{- else if eq .Arch "386" }}i386
+      {{- else }}{{ .Arch }}{{ end }}
+      {{- if .Arm }}v{{ .Arm }}{{ end }}
+    # use zip for windows archives
+    format_overrides:
+      - goos: windows
+        format: zip
+
+changelog:
+  sort: asc
+  filters:
+    exclude:
+      - "^docs:"
+      - "^test:"
+
+release:
+  footer: >-
+
+    ---
+
+    Released by [GoReleaser](https://github.com/goreleaser/goreleaser).
